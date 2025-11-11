@@ -35,8 +35,15 @@
 <body>
 
     <video id="videoPlayer" controls autoplay muted playsinline style="display: none;"></video>
-    <iframe id="iframePlayer" allowfullscreen style="display: none;"></iframe>
     
+    <iframe 
+        id="iframePlayer" 
+        style="display: none;"
+        allow="fullscreen; autoplay"
+        allowfullscreen="true"
+        webkitallowfullscreen="true"
+        mozallowfullscreen="true"
+    ></iframe>
     <div id="message"></div>
 
     <script src="./app.js"></script>
