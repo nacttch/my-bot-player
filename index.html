@@ -18,7 +18,7 @@
             align-items: center;
             color: white;
             font-family: Arial, sans-serif;
-            overflow: hidden; /* لمنع شريط التمرير */
+            overflow: hidden;
         }
         video, iframe {
             width: 100%;
@@ -30,20 +30,37 @@
             padding: 20px;
             text-align: center;
         }
+        
+        /* حجب جميع الإعلانات والروابط الدعائية */
+        iframe[src*="ads"], 
+        iframe[src*="ad."],
+        iframe[src*="doubleclick"],
+        iframe[src*="googleads"],
+        iframe[class*="ad"],
+        iframe[id*="ad"],
+        iframe[class*="ads"],
+        iframe[id*="ads"],
+        iframe[class*="container-"],
+        iframe[id*="container-"],
+        iframe[style*="z-index: 2147483647"],
+        iframe[style*="position: fixed"],
+        iframe[style*="inset: 0px"],
+        iframe[style*="bottom: 0px"],
+        iframe[style*="top: 0px"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            width: 0 !important;
+            height: 0 !important;
+            border: none !important;
+        }
     </style>
 </head>
 <body>
 
     <video id="videoPlayer" controls autoplay muted playsinline style="display: none;"></video>
+    <iframe id="iframePlayer" allowfullscreen style="display: none;"></iframe>
     
-    <iframe 
-        id="iframePlayer" 
-        style="display: none;"
-        allow="fullscreen; autoplay"
-        allowfullscreen="true"
-        webkitallowfullscreen="true"
-        mozallowfullscreen="true"
-    ></iframe>
     <div id="message"></div>
 
     <script src="./app.js"></script>
