@@ -1,67 +1,62 @@
 // 1. إخبار تيليجرام أن التطبيق جاهز
 try {
     Telegram.WebApp.ready();
-    Telegram.WebApp.expand(); // محاولة تكبير النافذة
+    Telegram.WebApp.expand(); 
 } catch (e) {
     console.error("Telegram WebApp API not available.", e);
 }
 
 // 2. إعداد العناصر
 const video = document.getElementById('videoPlayer');
-const loadingDiv = document.getElementById('loading');
-const errorDiv = document.getElementById('error');
+const iframe = document.getElementById('iframePlayer');
+const messageDiv = document.getElementById('message');
 
-// 3. جلب رابط البث من الـ URL
+// 3. جلب الروابط من الـ URL
 const params = new URLSearchParams(window.location.search);
 const streamUrl = params.get('stream_url');
+const iframeUrl = params.get('iframe_url');
 
-// 4. منطق التشغيل
+// 4. منطق التشغيل الهجين
 if (streamUrl) {
-    loadingDiv.style.display = 'block';
-    
+    // الحالة 1: وجدنا رابط نظيف (m3u8)
+    console.log("HLS stream found:", streamUrl);
+    video.style.display = 'block';
+    messageDiv.innerText = '... جاري تحميل البث النظيف ...';
+    messageDiv.style.display = 'block';
+
     if (Hls.isSupported()) {
-        // إذا كان المتصفح يدعم HLS
-        console.log("HLS.js is supported. Loading stream:", streamUrl);
         const hls = new Hls();
         hls.loadSource(decodeURIComponent(streamUrl));
         hls.attachMedia(video);
-        
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
-            loadingDiv.style.display = 'none';
+            messageDiv.style.display = 'none';
             video.play();
         });
-
         hls.on(Hls.Events.ERROR, function(event, data) {
-            console.error('HLS Error:', data);
-            loadingDiv.style.display = 'none';
-            errorDiv.style.display = 'block';
+            messageDiv.innerText = "❌ فشل تحميل البث (m3u8).";
         });
-
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // إذا كان المتصفح يدعم HLS أصلاً (مثل Safari على آيفون)
-        console.log("Native HLS supported. Loading stream:", streamUrl);
         video.src = decodeURIComponent(streamUrl);
-        
         video.addEventListener('loadedmetadata', function() {
-            loadingDiv.style.display = 'none';
+            messageDiv.style.display = 'none';
             video.play();
         });
-
         video.addEventListener('error', function() {
-            loadingDiv.style.display = 'none';
-            errorDiv.style.display = 'block';
+            messageDiv.innerText = "❌ فشل تحميل البث (native).";
         });
-
     } else {
-        // إذا لم يكن HLS مدعوماً
-        console.error("HLS not supported.");
-        loadingDiv.style.display = 'none';
-        errorDiv.style.display = 'block';
-        errorDiv.innerText = "❌ HLS not supported on this device.";
+        messageDiv.innerText = "❌ HLS not supported.";
     }
+
+} else if (iframeUrl) {
+    // الحالة 2: وجدنا رابط مشغل (iframe)
+    console.log("Iframe URL found:", iframeUrl);
+    iframe.style.display = 'block';
+    iframe.src = decodeURIComponent(iframeUrl);
+
 } else {
-    // إذا لم يتم تمرير رابط
-    console.error("No stream_url parameter found.");
-    errorDiv.style.display = 'block';
-    errorDiv.innerText = "❌ لم يتم العثور على رابط البث.";
+    // الحالة 3: لا يوجد رابط
+    console.error("No stream_url or iframe_url parameter found.");
+    messageDiv.style.display = 'block';
+    messageDiv.innerText = "❌ لم يتم العثور على رابط.";
 }
