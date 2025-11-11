@@ -31,7 +31,8 @@
             text-align: center;
         }
         
-        /* حجب جميع الإعلانات والروابط الدعائية */
+        /* حجب جميع الإعلانات وخاصة من frs2c.com */
+        iframe[src*="frs2c.com"],
         iframe[src*="ads"], 
         iframe[src*="ad."],
         iframe[src*="doubleclick"],
@@ -46,13 +47,17 @@
         iframe[style*="position: fixed"],
         iframe[style*="inset: 0px"],
         iframe[style*="bottom: 0px"],
-        iframe[style*="top: 0px"] {
+        iframe[style*="top: 0px"],
+        object[data*="frs2c.com"],
+        embed[src*="frs2c.com"],
+        img[src*="frs2c.com"] {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
             width: 0 !important;
             height: 0 !important;
             border: none !important;
+            pointer-events: none !important;
         }
     </style>
 </head>
