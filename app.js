@@ -7,13 +7,11 @@ try {
 }
 
 // 2. إعداد العناصر
-// لم نعد بحاجة لـ videoPlayer
 const iframe = document.getElementById('iframePlayer');
 const messageDiv = document.getElementById('message');
 
 // 3. جلب الروابط من الـ URL
 const params = new URLSearchParams(window.location.search);
-// لم نعد بحاجة لـ streamUrl
 const iframeUrl = params.get('iframe_url');
 
 // 4. منطق التشغيل (Iframe فقط)
@@ -31,4 +29,4 @@ if (iframeUrl) {
     messageDiv.innerText = "❌ لم يتم العثور على رابط.";
 }
 
-// تم حذف القوس الإضافي الذي كان يسبب الخطأ
+// لا يوجد أي أقواس إضافية هنا. هذا هو السطر الأخير.
